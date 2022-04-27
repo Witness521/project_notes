@@ -3,6 +3,8 @@ import pandas as pd
 
 # 1. 读取数据
 data = pd.read_excel('C:\\Users\\Administrator\\Desktop\\数据.xlsx')
+# 保存数据
+data.to_excel('C:\\Users\\Administrator\\Desktop\\数据.xlsx')
 
 # 2. 读取列
 # 此处双中括号读取出的形式就是dataframe
@@ -19,3 +21,17 @@ dataframe由多个series组成，无论是行还是列，单独拆分出来都�
 '''
 
 # 3. 读取行
+# dataframe读取行 固定用法
+read_line = data[0:3]
+read_line = data.loc[3]
+
+# 4. 删除空行
+data = data.dropna()
+# dropna之后的索引并不会改变，可能是1 13 14 15
+# 所以需要充值索引
+data.reset_index(drop=True, inplace=True)
+
+
+# 5. 为某一列赋值
+data.loc[5] = [stock_code.loc[5, '股票代码'], 0]
+
