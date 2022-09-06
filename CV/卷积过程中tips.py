@@ -31,3 +31,8 @@ self.relu = nn.ReLU(inplace=True)
     
     即： 一个过滤器就对应一个特征图。
 '''
+
+'''
+    机器学习中的ground truth
+    在监督学习中，数据都是有标注的，以(x, t)的形式出现，其中x是输入数据，t是标注。 正确的t标注就是ground truth
+'''
