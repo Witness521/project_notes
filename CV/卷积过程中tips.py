@@ -35,4 +35,28 @@ self.relu = nn.ReLU(inplace=True)
 '''
     机器学习中的ground truth
     在监督学习中，数据都是有标注的，以(x, t)的形式出现，其中x是输入数据，t是标注。 正确的t标注就是ground truth
+    
+    baseline:
+    所谓baseline，就是用最原始最简单的方法实现任务。(因此就有了strong baseline的概念，可以用较强的对比组模型)
+    将baseline作为对照，我们不断提升算法性能，不然没有对比，无法体现算法的优劣。
+    
+    Ablation Study - 消融实验
+    将最终的模型进行简化，以研究模型中不同部分(components)的影响
+    立场提取和推理网络中的消融实验
+    1. 验证post-reply pair的作用，消融成只使用post和reply的平均向量去做classification
+    2. 消融掉推理图网络，只使用所有立场表示的平均值进行检测
+    3. 忽略模型中的可视化信息，并保持其他组件不变
+    4. 消融掉句子引导的注意力层，直接把文本特征和图片特征聚合为此模型中的多模态特征代表
+'''
+
+'''
+    上采样和反卷积
+    上采样一些常见的方法有：近邻插值（nearest interpolation）、双线性插值(bilinear interpolation)，双三次插值（Bicubic interpolation），
+    反卷积(Transposed Convolution)，反池化(Unpooling)
+    
+    
+    
+    链接：https://www.zhihu.com/question/328891283/answer/1604072340
+
+    
 '''
