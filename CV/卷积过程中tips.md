@@ -51,9 +51,54 @@ baseline:
 ### 六、上采样和反卷积
 上采样一些常见的方法有：近邻插值（nearest interpolation）、双线性插值(bilinear interpolation)，双三次插值（Bicubic interpolation），
 反卷积(Transposed Convolution)，反池化(Unpooling)
-![img.png](pic/img.png)
-![img.png](pic/img2.png)
+
+<div align=center><img src="pic/img1.png" style="zoom: 67%;"><br>
+<img src="pic/img2.png" style="zoom: 67%;"></div>
 
 [链接](https://www.zhihu.com/question/328891283/answer/1604072340)
 
-    
+### 七、 膨胀卷积（空洞卷积、扩张卷积）
+
+**感受野(receptive field)**的Defination：：CNN中，某一层输出结果中一个元素所对应的输入层的区域大小，感受野是卷积核在图像上看到的大小，例如3×3卷积核的感受野大小为9。越大的感受野包含越多的上下文关系。
+
+感受野的计算：[感受野计算的连接](https://blog.csdn.net/program_developer/article/details/80958716)
+
+以**单层**的卷积来说，在普通的3×3卷积核完成卷积之后，原5×5特征图变成3×3，即：3×3特征图上的像素点的感受野为5×5（注明：在最后一层卷积操作的感受野就等于卷积核的大小）
+
+对于**多层**卷积来说：
+
+<img src="H:\files\python_file\project_notes\CV\pic\image-20220917202144425.png" alt="image-20220917202144425" style="zoom: 50%;" />
+
+<img src="H:\files\python_file\project_notes\CV\pic\image-20220917202330421.png" alt="image-20220917202330421" style="zoom: 67%;" />
+
+三层3×3卷积核操作之后的感受野是7*7，其中卷积核的步长为1，padding为0
+
+感受野的计算方法采用从后向前计算：$RF_i=(RF_{i+1}-1)\times stride_i+Ksize_i$
+
+
+
+- 膨胀卷积与普通的卷积相比：除了卷积核的大小以外，还有一个扩张率(dilation rate)参数，主要用来表示膨胀的大小。
+- 膨胀卷积与普通卷积的相同点在于：卷积核的大小是一样的，在神经网络中即参数数量不变，区别在于膨胀卷积具有更大的感受野。
+- 对比传统的conv操作，3层3x3的卷积加起来，stride为1的话，只能达到(kernel-1)*layer+1=7的感受野，也就是和层数layer成线性关系，而dilated conv的感受野是指数级的增长。
+
+<div align=center><img src="H:\files\python_file\project_notes\CV\pic\image-20220917191103020.png" alt="image-20220917191103020" style="zoom: 67%;" /></div>
+
+
+
+空洞卷积产生的问题：栅格效应
+
+多个相同膨胀率的空洞卷积堆叠：
+
+<img src="H:\files\python_file\project_notes\CV\pic\image-20220917220044853.png" alt="image-20220917220044853" style="zoom:67%;" />
+
+
+
+解决方法：Hybrid Dilated Convolution（HDC) 混合膨胀卷积  [链接](https://www.cnblogs.com/yanshw/p/16128989.html)
+
+1. 锯齿结构
+
+​    dilated rate设计成了锯齿状结构，例如[1, 2, 5, 1, 2, 5]这样的循环结构 
+
+锯齿状本身的性质就比较好的来同时满足小物体大物体的分割要求(小 dilation rate 来关心近距离信息，大 dilation rate 来关心远距离信息)。 这样卷积依然是连续的，依然能满足VGG组观察的结论，大卷积是由小卷积的 regularisation 的 叠加。
+
+2. 公约数不能大于 1

@@ -11,6 +11,8 @@ data.to_excel('C:\\Users\\Administrator\\Desktop\\数据.xlsx')
 stock_code = data[['股票代码', '一']]
 # 单中括号读取出的就是Series
 stock_code = data['股票代码']
+# 读取到的数据可以使用np.array()转成ndarray的数组格式
+np.array(stock_code)
 '''
 dataframe和series区别：
 series，只是一个一维数据结构，它由index和value组成。
